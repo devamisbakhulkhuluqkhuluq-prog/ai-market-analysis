@@ -34,7 +34,7 @@ export const handler = async (event, context) => {
         const data = await response.json();
         
         if (!data.candidates || !data.candidates[0]) {
-            throw new Error("Format respons tidak sesuai dari Gemini API");
+            throw new Error("Format respons tidak sesuai dari Gemini API: " + JSON.stringify(data));
         }
         
         const candidate = data.candidates[0];
