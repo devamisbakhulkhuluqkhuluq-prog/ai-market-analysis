@@ -8,7 +8,7 @@ export const handler = async (event, context) => {
 
         if (!API_KEY) throw new Error("API Key hilang. Cek Environment Variables di Netlify.");
 
-        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
         // Mengambil waktu real-time dalam zona waktu Indonesia (WIB)
         const currentTime = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
