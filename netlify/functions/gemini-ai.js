@@ -33,9 +33,23 @@ export const handler = async (event, context) => {
 
         const data = await response.json();
         
+        if (!data.candidates || !data.candidates[0]) {
+            throw new Error("Format respons tidak sesuai dari Gemini API");
+        }
+        
+        const candidate = data.candidates[0];
+        
+        if (candidate.finishReason === 'SAFETY') {
+            throw new Error("Permintaan ditolak oleh Gemini API karena melanggar kebijakan keamanan (Safety). Coba gunakan kata-kata yang lebih aman.");
+        }
+        
+        if (!candidate.content || !candidate.content.parts || !candidate.content.parts[0]) {
+            throw new Error("Respons dari AI kosong atau formatnya tidak dikenali.");
+        }
+        
         return {
             statusCode: 200,
-            body: JSON.stringify({ reply: data.candidates[0].content.parts[0].text })
+            body: JSON.stringify({ reply: candidate.content.parts[0].text })
         };
     } catch (error) {
         return { statusCode: 500, body: JSON.stringify({ reply: error.message }) };
