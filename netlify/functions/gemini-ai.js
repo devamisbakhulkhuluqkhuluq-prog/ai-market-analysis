@@ -23,13 +23,18 @@ export const handler = async (event, context) => {
         3. Jika diminta setup risiko, berikan Entry, SL, dan TP.
         Gunakan format poin-poin yang rapi, profesional, dan selalu sertakan disclaimer risiko trading.`;
 
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 25000); // 25 detik timeout
+
         const response = await fetch(geminiEndpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            signal: controller.signal,
             body: JSON.stringify({
                 contents: [{ role: "user", parts: [{ text: `${systemInstruction}\n\nKondisi Market: ${prompt}` }] }]
             })
         });
+        clearTimeout(timeoutId);
 
         const data = await response.json();
         

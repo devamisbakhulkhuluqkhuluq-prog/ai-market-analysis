@@ -3,6 +3,10 @@
   publish = "dist"
   functions = "netlify/functions"
 
+[functions]
+  node_bundler = "esbuild"
+
+
 # Aturan ini wajib untuk React agar routing berjalan lancar (jika nanti Anda tambah halaman)
 [[redirects]]
   from = "/*"
