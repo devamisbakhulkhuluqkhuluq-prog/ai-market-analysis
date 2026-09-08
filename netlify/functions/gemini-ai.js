@@ -1,24 +1,27 @@
-exports.handler = async function(event, context) {
+// Menggunakan export const untuk menyesuaikan dengan aturan ES Module bawaan Vite
+export const handler = async (event, context) => {
     if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
 
     try {
         const { prompt, pair } = JSON.parse(event.body);
         const API_KEY = process.env.GEMINI_API_KEY; 
 
-        if (!API_KEY) throw new Error("API Key hilang");
+        if (!API_KEY) throw new Error("API Key hilang. Cek Environment Variables di Netlify.");
 
         const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
-        // Konteks dinamis untuk AI
-        const systemInstruction = `Kamu adalah seorang analis Forex fundamental dan teknikal profesional yang ahli dalam membaca rilis data makroekonomi (NFP, CPI, Suku Bunga, GDP, dll).
-Saat ini user sedang menganalisa pair ${pair}.
+        // Mengambil waktu real-time dalam zona waktu Indonesia (WIB)
+        const currentTime = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
 
-Tugasmu adalah menganalisis skenario "Jika/Maka" berdasarkan data yang dimasukkan user (Previous, Forecast, dan Actual):
-1. **Analisis Deviasi:** Hitung selisih atau tingkat kejutan (surprise) antara Actual dan Forecast.
-2. **Reaksi Market:** Jelaskan bagaimana respons mata uang terkait (apakah menguat/bullish atau melemah/bearish).
-3. **Skenario Aksi:** Berikan proyeksi arah harga, level support/resistance yang berpotensi ditembus, dan tips manajemen risiko.
-
-Gunakan format poin-poin yang rapi, profesional, mudah dibaca, dan selalu sertakan disclaimer bahwa trading forex memiliki risiko tinggi.`;
+        // Instruksi sistem yang sudah diperkuat dengan Konteks Waktu & News Trading
+        const systemInstruction = `Kamu adalah analis Forex profesional. Saat ini user sedang menganalisa pair ${pair}.
+        INFO PENTING: Saat ini adalah tanggal dan waktu: ${currentTime} WIB. Gunakan ini sebagai konteks real-time saat menganalisis berita atau tren terbaru.
+        
+        Tugasmu:
+        1. Jika user memberikan skenario Actual vs Forecast, analisis dampak selisih/deviasinya.
+        2. Berikan proyeksi arah harga dan level Support/Resistance.
+        3. Jika diminta setup risiko, berikan Entry, SL, dan TP.
+        Gunakan format poin-poin yang rapi, profesional, dan selalu sertakan disclaimer risiko trading.`;
 
         const response = await fetch(geminiEndpoint, {
             method: 'POST',
@@ -29,14 +32,6 @@ Gunakan format poin-poin yang rapi, profesional, mudah dibaca, dan selalu sertak
         });
 
         const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.error?.message || \`Gemini API Error: \${response.statusText}\`);
-        }
-        
-        if (!data.candidates || !data.candidates[0]) {
-            throw new Error("Format respons tidak sesuai dari Gemini API");
-        }
         
         return {
             statusCode: 200,
