@@ -115,7 +115,10 @@ function App() {
         body: JSON.stringify({ prompt: prompt, pair: symbol })
       });
 
-      if (!response.ok) throw new Error('Gagal menghubungi AI');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ reply: 'Gagal menghubungi AI' }));
+        throw new Error(errorData.reply || 'Gagal menghubungi AI');
+      }
       
       const data = await response.json();
       setAiResult(data.reply);

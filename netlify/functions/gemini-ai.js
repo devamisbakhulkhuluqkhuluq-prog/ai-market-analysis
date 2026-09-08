@@ -30,6 +30,14 @@ Gunakan format poin-poin yang rapi, profesional, mudah dibaca, dan selalu sertak
 
         const data = await response.json();
         
+        if (!response.ok) {
+            throw new Error(data.error?.message || \`Gemini API Error: \${response.statusText}\`);
+        }
+        
+        if (!data.candidates || !data.candidates[0]) {
+            throw new Error("Format respons tidak sesuai dari Gemini API");
+        }
+        
         return {
             statusCode: 200,
             body: JSON.stringify({ reply: data.candidates[0].content.parts[0].text })
