@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import ReactMarkdown from 'react-markdown';
 import './App.css';
 
 function App() {
@@ -199,11 +198,7 @@ function App() {
             
             <div className="result-box" style={{ marginTop: '15px', padding: '10px', background: '#2a2e39', borderRadius: '5px' }}>
               {loading && <div className="loader-text">Mengumpulkan data...</div>}
-              {!loading && aiResult && (
-                <div className="ai-content">
-                  <ReactMarkdown>{aiResult}</ReactMarkdown>
-                </div>
-              )}
+              {!loading && aiResult && <div className="ai-content" style={{ whiteSpace: 'pre-wrap' }}>{aiResult}</div>}
             </div>
           </div>
 

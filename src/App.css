@@ -201,46 +201,7 @@
 
 .ai-content {
   color: var(--text-h);
-  line-height: 1.7;
+  line-height: 1.6;
+  white-space: pre-wrap;
   font-size: 15px;
-}
-
-.ai-content p {
-  margin: 0 0 10px 0;
-}
-
-.ai-content strong {
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.ai-content h1, .ai-content h2, .ai-content h3 {
-  color: var(--text-h);
-  font-size: 16px;
-  font-weight: 600;
-  margin: 12px 0 6px 0;
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.ai-content ul, .ai-content ol {
-  padding-left: 20px;
-  margin: 6px 0 10px 0;
-}
-
-.ai-content li {
-  margin-bottom: 4px;
-}
-
-.ai-content hr {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 12px 0;
-}
-
-.ai-content code {
-  background: var(--code-bg);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 13px;
 }
