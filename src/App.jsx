@@ -120,7 +120,11 @@ function App() {
         let errorReply = `API Error ${response.status}`;
         try {
           const errorJson = JSON.parse(errorText);
-          if (errorJson.reply) errorReply = errorJson.reply;
+          if (errorJson.reply) {
+            errorReply = errorJson.reply;
+          } else {
+            errorReply = `API Error ${response.status}: ${JSON.stringify(errorJson)}`;
+          }
         } catch (e) {
           errorReply = `Response bukan JSON (Status ${response.status}): ${errorText.substring(0, 30)}...`;
         }
